@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config';
 
 const getMockInterviewQuestions = (job) => {
   const title = job.title.toLowerCase();
@@ -72,7 +73,7 @@ export default function JobList({ profile }) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('/api/match-jobs', {
+        const response = await fetch(getApiUrl('/api/match-jobs'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(profile)
@@ -129,7 +130,7 @@ export default function JobList({ profile }) {
     setCoverLetterText('');
     setCopied(false);
     try {
-      const response = await fetch('/api/generate-cover-letter', {
+      const response = await fetch(getApiUrl('/api/generate-cover-letter'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile, job })
@@ -185,7 +186,7 @@ export default function JobList({ profile }) {
         answer: interviewAnswers[idx] || ''
       }));
 
-      const response = await fetch('/api/evaluate-interview', {
+      const response = await fetch(getApiUrl('/api/evaluate-interview'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ job: activeInterviewJob, QAs: qas })

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { getApiUrl } from '../config';
 
 // Sample resumes to try out immediately
 const SAMPLE_RESUMES = {
@@ -84,13 +85,13 @@ export default function UploadSection({ onUploadSuccess, onUploadStart, onError 
     try {
       let response;
       if (isTextPayload) {
-        response = await fetch('/api/analyze-resume', {
+        response = await fetch(getApiUrl('/api/analyze-resume'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ resumeText: textPayload })
         });
       } else {
-        response = await fetch('/api/analyze-resume', {
+        response = await fetch(getApiUrl('/api/analyze-resume'), {
           method: 'POST',
           body: formData
         });
