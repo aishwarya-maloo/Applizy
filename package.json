@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "backend",
+    "api",
     "frontend"
   ],
   "scripts": {
-    "install-all": "npm install && npm install --workspace=backend && npm install --workspace=frontend",
-    "dev:backend": "npm run dev --workspace=backend",
+    "install-all": "npm install && npm install --workspace=api && npm install --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=api",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build": "npm run build --workspace=frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
