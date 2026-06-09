@@ -118,9 +118,6 @@ export default function App() {
           >
             {isDarkMode ? '☀️' : '🌙'}
           </button>
-          <div className="theme-badge">
-            ✨ DeepSeek AI Driven
-          </div>
         </div>
       </header>
 
