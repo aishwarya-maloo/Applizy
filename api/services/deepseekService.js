@@ -358,3 +358,72 @@ function evaluateInterviewHeuristically(job, QAs) {
     evaluations
   };
 }
+
+/**
+ * AI Resume Polisher using DeepSeek.
+ */
+export async function polishResume(profile) {
+  if (openai) {
+    try {
+      console.log('Polishing resume with DeepSeek AI...');
+      const response = await openai.chat.completions.create({
+        model: 'deepseek-chat',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert executive resume writer. Polish and optimize the candidate's resume details to maximize ATS compatibility and appeal to senior recruiters.
+            Provide:
+            1. A highly polished, professional summary (2-3 sentences).
+            2. 3-4 impactful, metrics-driven bullet points suitable for their experience/projects.
+            3. 4-5 recommended technical skills to learn/add based on their target roles.
+            
+            Do not wrap your output in markdown code blocks. Output ONLY valid raw JSON.
+            
+            JSON schema:
+            {
+              "polishedSummary": "A polished professional summary...",
+              "polishedExperience": [
+                "Achieved X by implementing Y, resulting in Z% improvement.",
+                "Built X using Y, optimizing performance by Z%...",
+                ...
+              ],
+              "recommendedSkills": ["Skill A", "Skill B", ...]
+            }`
+          },
+          {
+            role: 'user',
+            content: `CANDIDATE PROFILE:\n${JSON.stringify(profile, null, 2)}`
+          }
+        ],
+        temperature: 0.6,
+        response_format: { type: 'json_object' }
+      });
+      return JSON.parse(response.choices[0].message.content.trim());
+    } catch (error) {
+      console.error('DeepSeek resume polishing error, falling back to local:', error.message);
+    }
+  }
+
+  return polishResumeHeuristically(profile);
+}
+
+function polishResumeHeuristically(profile) {
+  const skillsList = (profile.skills || []).slice(0, 3).join(', ') || 'software development';
+  const rolesList = (profile.targetRoles || []).join(' or ') || 'Software Engineering';
+  
+  const polishedSummary = `Results-driven developer with foundational expertise in ${skillsList}. Proven capability to deliver clean code, optimize databases, and contribute to technical project lifecycles. Eager to leverage these skills for high-impact ${rolesList} opportunities.`;
+  
+  const polishedExperience = [
+    `Designed and deployed robust technical solutions using ${profile.skills[0] || 'Python'}, improving execution efficiency and code maintainability.`,
+    `Collaborated on multi-functional projects, integrating databases and building interactive components resulting in seamless user workflows.`,
+    `Engineered and optimized local applications, executing rigorous testing to locate and address bottleneck issues, reducing debugging cycles by 20%.`
+  ];
+  
+  const recommendedSkills = ['Git', 'Docker', 'REST APIs', 'TypeScript', 'SQL'];
+  
+  return {
+    polishedSummary,
+    polishedExperience,
+    recommendedSkills
+  };
+}

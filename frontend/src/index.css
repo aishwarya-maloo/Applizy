@@ -396,6 +396,27 @@ button, input, select {
   position: sticky;
   top: 90px;
   padding: 1.75rem;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+}
+
+.profile-card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.profile-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.profile-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.profile-card::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 .profile-avatar {

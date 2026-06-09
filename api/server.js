@@ -3,7 +3,7 @@ import cors from 'cors';
 import multer from 'multer';
 import pdfParse from 'pdf-parse';
 import dotenv from 'dotenv';
-import { parseResume, generateCoverLetter, evaluateInterview } from './services/deepseekService.js';
+import { parseResume, generateCoverLetter, evaluateInterview, polishResume } from './services/deepseekService.js';
 import { matchJobs } from './services/matchingService.js';
 
 dotenv.config();
@@ -124,6 +124,25 @@ app.post('/api/evaluate-interview', async (req, res) => {
   } catch (error) {
     console.error('Error evaluating interview:', error);
     res.status(500).json({ error: error.message || 'Failed to evaluate interview.' });
+  }
+});
+
+/**
+ * POST /api/polish-resume
+ * Calls DeepSeek to generate a polished resume suggestion.
+ */
+app.post('/api/polish-resume', async (req, res) => {
+  try {
+    const profile = req.body;
+    if (!profile) {
+      return res.status(400).json({ error: 'Profile parameter is required.' });
+    }
+
+    const polishedData = await polishResume(profile);
+    res.json(polishedData);
+  } catch (error) {
+    console.error('Error polishing resume:', error);
+    res.status(500).json({ error: error.message || 'Failed to polish resume.' });
   }
 });
 
